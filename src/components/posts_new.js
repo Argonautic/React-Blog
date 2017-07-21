@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 // It also helps hook up a component to Redux state
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createPost } from '../actions/index';
 
 class PostsNew extends Component {
     renderField(field) {
@@ -31,7 +33,11 @@ class PostsNew extends Component {
     }
 
     onSubmit(values) {
-        console.log(values)
+        this.props.createPost(values, () => {
+            // will push the user to the route specified, as long as PostsNew is
+            // hooked up by react route
+            this.props.history.push('/');
+        });
     }
 
     render() {
@@ -95,4 +101,6 @@ export default reduxForm({
     // this instance 'PostsNewForm') can be anything
     form: 'PostsNewForm',
     validate,
-})(PostsNew);
+})(
+    connect(null, { createPost })(PostsNew)
+);
